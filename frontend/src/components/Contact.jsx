@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -11,10 +13,13 @@ import { useScrollAnimation } from "../hooks/useScrollAnimation";
 const Contact = () => {
   const { toast } = useToast();
   const sectionRef = useScrollAnimation();
+  const formRef = useRef();
+
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    user_name: "",
+    user_email: "",
     subject: "",
     message: ""
   });
@@ -28,13 +33,42 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // This is MOCK functionality - will be replaced with backend integration
-    console.log("Form submitted:", formData);
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setLoading(true);
+
+    emailjs
+      .sendForm(
+        "service_vzkweb5",
+        "template_rrb0g45",
+        formRef.current,
+        "QvBZg3DX3nS-ZdSnX"
+      )
+      .then(
+        () => {
+          toast({
+            title: "✅ Message Sent!",
+            description: "Thank you for reaching out. I'll get back to you soon.",
+          });
+
+          setFormData({
+            user_name: "",
+            user_email: "",
+            subject: "",
+            message: ""
+          });
+
+          setLoading(false);
+        },
+        (error) => {
+          console.error(error);
+
+          toast({
+            title: "❌ Failed to send",
+            description: "Something went wrong. Please try again.",
+          });
+
+          setLoading(false);
+        }
+      );
   };
 
   return (
@@ -66,6 +100,7 @@ const Contact = () => {
                       </a>
                     </div>
                   </div>
+
                   <div className="contact-item">
                     <MapPin size={20} />
                     <div>
@@ -73,6 +108,7 @@ const Contact = () => {
                       <div className="contact-value">{personalInfo.location}</div>
                     </div>
                   </div>
+
                   <div className="contact-item">
                     <Github size={20} />
                     <div>
@@ -87,6 +123,7 @@ const Contact = () => {
                       </a>
                     </div>
                   </div>
+
                   <div className="contact-item">
                     <Linkedin size={20} />
                     <div>
@@ -112,30 +149,34 @@ const Contact = () => {
                 <CardTitle>Send a Message</CardTitle>
                 <CardDescription>I'll respond as soon as possible</CardDescription>
               </CardHeader>
+
               <CardContent>
-                <form onSubmit={handleSubmit} className="contact-form">
+                <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
+
                   <div className="form-group">
                     <Input
                       type="text"
-                      name="name"
+                      name="user_name"
                       placeholder="Your Name"
-                      value={formData.name}
+                      value={formData.user_name}
                       onChange={handleChange}
                       required
                       className="form-input"
                     />
                   </div>
+
                   <div className="form-group">
                     <Input
                       type="email"
-                      name="email"
+                      name="user_email"
                       placeholder="Your Email"
-                      value={formData.email}
+                      value={formData.user_email}
                       onChange={handleChange}
                       required
                       className="form-input"
                     />
                   </div>
+
                   <div className="form-group">
                     <Input
                       type="text"
@@ -147,6 +188,7 @@ const Contact = () => {
                       className="form-input"
                     />
                   </div>
+
                   <div className="form-group">
                     <Textarea
                       name="message"
@@ -158,10 +200,12 @@ const Contact = () => {
                       className="form-textarea"
                     />
                   </div>
-                  <Button type="submit" size="lg" className="submit-button">
+
+                  <Button type="submit" size="lg" className="submit-button" disabled={loading}>
                     <Send size={20} />
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
+
                 </form>
               </CardContent>
             </Card>
