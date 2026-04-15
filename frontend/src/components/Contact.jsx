@@ -1,79 +1,17 @@
-import React, { useState, useRef } from "react";
-import emailjs from "@emailjs/browser";
+import React from "react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Mail, MapPin, Github, Linkedin, Send } from "lucide-react";
+import { Mail, MapPin, Github, Linkedin } from "lucide-react";
 import { personalInfo } from "../mock";
-import { useToast } from "../hooks/use-toast";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Contact = () => {
-  const { toast } = useToast();
   const sectionRef = useScrollAnimation();
-  const formRef = useRef();
-
-  const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    user_name: "",
-    user_email: "",
-    subject: "",
-    message: ""
-  });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    emailjs
-      .sendForm(
-        "service_vzkweb5",
-        "template_rrb0g45",
-        formRef.current,
-        "QvBZg3DX3nS-ZdSnX"
-      )
-      .then(
-        () => {
-          toast({
-            title: "✅ Message Sent!",
-            description: "Thank you for reaching out. I'll get back to you soon.",
-          });
-
-          setFormData({
-            user_name: "",
-            user_email: "",
-            subject: "",
-            message: ""
-          });
-
-          setLoading(false);
-        },
-        (error) => {
-          console.error(error);
-
-          toast({
-            title: "❌ Failed to send",
-            description: "Something went wrong. Please try again.",
-          });
-
-          setLoading(false);
-        }
-      );
-  };
 
   return (
     <section id="contact" className="contact-section" ref={sectionRef}>
       <div className="section-container">
+        
         <div className="section-header scroll-animate">
           <h2 className="section-title">Get In Touch</h2>
           <div className="title-underline"></div>
@@ -83,14 +21,20 @@ const Contact = () => {
         </div>
 
         <div className="contact-content">
+
+          {/* LEFT: CONTACT INFO */}
           <div className="contact-info scroll-animate">
-            <Card className="contact-info-card">
+            <Card className="contact-info-card h-full">
               <CardHeader>
                 <CardTitle>Contact Information</CardTitle>
-                <CardDescription>Feel free to reach out through any channel</CardDescription>
+                <CardDescription>
+                  Feel free to reach out through any channel
+                </CardDescription>
               </CardHeader>
+
               <CardContent>
                 <div className="contact-details">
+
                   <div className="contact-item">
                     <Mail size={20} />
                     <div>
@@ -105,7 +49,9 @@ const Contact = () => {
                     <MapPin size={20} />
                     <div>
                       <div className="contact-label">Location</div>
-                      <div className="contact-value">{personalInfo.location}</div>
+                      <div className="contact-value">
+                        {personalInfo.location}
+                      </div>
                     </div>
                   </div>
 
@@ -138,78 +84,63 @@ const Contact = () => {
                       </a>
                     </div>
                   </div>
+
                 </div>
               </CardContent>
             </Card>
           </div>
 
+          {/* RIGHT: EDUCATION */}
           <div className="contact-form-wrapper scroll-animate">
-            <Card className="contact-form-card">
+            <Card className="contact-form-card h-full">
+              
               <CardHeader>
-                <CardTitle>Send a Message</CardTitle>
-                <CardDescription>I'll respond as soon as possible</CardDescription>
+                <CardTitle className="text-white font-bold text-2xl">
+                  Education
+                </CardTitle>
               </CardHeader>
 
-              <CardContent>
-                <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
+              <CardContent className="flex flex-col justify-between h-full">
+                <div className="space-y-8">
 
-                  <div className="form-group">
-                    <Input
-                      type="text"
-                      name="user_name"
-                      placeholder="Your Name"
-                      value={formData.user_name}
-                      onChange={handleChange}
-                      required
-                      className="form-input"
-                    />
+                  {/* Education 1 */}
+                  <div>
+                    <h3 className="text-[#0EA5E9] text-xl font-semibold">
+                      J.C. Bose University (2022–2025)
+                    </h3>
+                    <p className="text-white text-lg">
+                      Bachelor of Computer Applications
+                    </p>
+                    <p className="text-white text-lg">
+                      Specialization: Data Science
+                    </p>
+                    <p className="text-gray-400 text-sm mt-1">
+                      Focused on data analysis, visualization, and machine learning fundamentals.
+                    </p>
                   </div>
 
-                  <div className="form-group">
-                    <Input
-                      type="email"
-                      name="user_email"
-                      placeholder="Your Email"
-                      value={formData.user_email}
-                      onChange={handleChange}
-                      required
-                      className="form-input"
-                    />
+                  {/* Education 2 */}
+                  <div>
+                    <h3 className="text-[#0EA5E9] text-xl font-semibold">
+                      Amity University Online (2026–2028)
+                    </h3>
+                    <p className="text-white text-lg">
+                      Master of Computer Application
+                    </p>
+                    <p className="text-white text-lg">
+                      Specialization: Artificial Intelligence & Machine Learning
+                    </p>
+                    <p className="text-gray-400 text-sm mt-1">
+                      Advanced studies in AI, deep learning, and real-world ML applications.
+                    </p>
                   </div>
 
-                  <div className="form-group">
-                    <Input
-                      type="text"
-                      name="subject"
-                      placeholder="Subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="form-input"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <Textarea
-                      name="message"
-                      placeholder="Your Message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={6}
-                      className="form-textarea"
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="submit-button" disabled={loading}>
-                    <Send size={20} />
-                    {loading ? "Sending..." : "Send Message"}
-                  </Button>
-
-                </form>
+                </div>
               </CardContent>
+
             </Card>
           </div>
+
         </div>
       </div>
     </section>
