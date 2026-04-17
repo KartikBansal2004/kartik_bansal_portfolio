@@ -8,7 +8,7 @@ export const personalInfo = {
   email: "Bansalkartik1980@gmail.com",
   linkedin: "https://www.linkedin.com/in/kartikbansal1980/",
   github: "https://github.com/KartikBansal2004",
-  resume: "https://drive.google.com/file/d/15vQyAvZGuFg7NjqKMnoU8M4335w_3rLw/view?usp=drive_link"
+  resume: "https://drive.google.com/file/d/193eEBVn-Q2_bpVCDEgnh3Xzjhucg-hnq/view?usp=sharing"
 };
 
 export const skills = {
